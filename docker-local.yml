@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  localstack:
+    image: localstack/localstack
+    ports:
+      - "4567-4584:4567-4584"
+      - "8090:${PORT_WEB_UI_INTERNAL-8080}"
+    environment:
+      - SERVICES=kinesis,dynamodb
+      - DEFAULT_REGION=eu-central-1
+      - DEBUG=${DEBUG- 1}
+      - DATA_DIR=${DATA_DIR- }
+      - PORT_WEB_UI=8090
+      - PORT_WEB_UI_INTERNAL=8080
+      - LAMBDA_EXECUTOR=${LAMBDA_EXECUTOR- }
+        - KINESIS_ERROR_PROBABILITY=${KINESIS_ERROR_PROBABILITY- }
+        - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "/private${TMPDIR:-/tmp/localstack}:/tmp/localstack"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4569"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  configure-dynamodb:
+    build:
+      context: .
+      dockerfile: ./ci/dynamodb/Dockerfile
+    links:
+      - localstack
+    depends_on:
+        - localstack
+    restart: on-failure
+    container_name: localhost-configure-dynamodb
