@@ -27,7 +27,7 @@ services:
   configure-dynamodb:
     build:
       context: .
-      dockerfile: ./ci/dynamodb/Dockerfile
+      dockerfile: Dockerfile
     links:
       - localstack
     depends_on:
