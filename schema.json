@@ -1,0 +1,49 @@
+{
+    "AttributeDefinitions": [
+    {
+        "AttributeName": "test1",
+        "AttributeType": "S"
+    },
+    {
+        "AttributeName": "test2",
+        "AttributeType": "N"
+    },
+    {
+        "AttributeName": "test3",
+        "AttributeType": "S"
+    }
+    ],
+        "GlobalSecondaryIndexes": [
+        {
+            "IndexName": "allocatedDateIndex",
+            "Projection": {
+                "ProjectionType": "ALL"
+            },
+            "ProvisionedThroughput": {
+                "WriteCapacityUnits": 5,
+                "ReadCapacityUnits": 5
+            },
+            "KeySchema": [
+            {
+                "AttributeName": "test3",
+                "KeyType": "HASH"
+            },
+            {
+                "AttributeName": "test2",
+                "KeyType": "RANGE"
+            }
+            ]
+        }
+    ],
+        "ProvisionedThroughput": {
+            "WriteCapacityUnits": 5,
+            "ReadCapacityUnits": 5
+        },
+        "TableName": "numbers",
+        "KeySchema": [
+        {
+            "KeyType": "HASH",
+            "AttributeName": "test1"
+        }
+    ]
+}
